@@ -17,7 +17,8 @@ SVM_Acc = (2000 - sum(diff))/2000
 Y_ls=[ones(1000,1);-1*ones(1000,1)];
 X_ls=[train.d79,ones(n,1)];
 W=lsqlin(X_ls,Y_ls);
-LS_label=sign(X_ls*W);
+X_ls_test=[test.d79,ones(n,1)];
+LS_label=sign(X_ls_test*W);
 LS_Acc = (2000-1/2*(sum(abs(Y_ls-LS_label))))/2000
 
 %%  changing Penalty term
