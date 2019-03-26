@@ -41,3 +41,8 @@ plot(x,svm_err_list,'r')
 hold on
 plot(x,ls_err_list,'b')
 legend('SVM','LS','Location','NE');
+title('Error rate of linear svm and linear regression')
+xticks([1:5:40])
+% xticklabels({'50','250','450','1e-7','1e-6','1e-5','1e-4','1e-3','1e-2','1e-1'})
+xlabel('train size/*50');
+ylabel('Error rate');
