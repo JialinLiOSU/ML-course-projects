@@ -1,4 +1,5 @@
 % HW3 of Machine Learning Class Problem 3 about K means
+clear
 train = load('train79.mat');
 test = load('test79.mat');
 % the number of observated data in training dataset
@@ -15,14 +16,13 @@ k_list=[2,5,10,50]
 rate_misc_list=(-1)*ones(4,1);
 for i=1:length(rate_misc_list)
     k=k_list(i);
-    [idx,C,sumd] = kmeans(train.d79,k);
-    [Idx,D] = knnsearch(Cent,C,'k',1);
-    l2 = find(Idx==2);
-    idx_class = idx;
-    idx_class(ismember(idx_class,l2))=-1;
-    idx_class(idx_class~=-1)=1;
-    Num_misc = 1/2*(sum(abs(Y-idx_class)));
-    rate_misc=Num_misc/n;
+    [idx_class_p,Cent_coord,sumd] = kmeans(train.d79,k); % Conduct K-means
+    [idx_class_cluster,D] = knnsearch(Cent,Cent_coord,'k',1); % classify the k clusters to 2 classes 7 or 9
+    l2 = find(idx_class_cluster==2); % find the index of cluster who is classified to class 9
+    idx_class_p(ismember(idx_class_p,l2))=-1; % assign value of -1 to the points who are class 9
+    idx_class_p(idx_class_p~=-1)=1; % assign value of 1 to the other points
+    Num_misc = 1/2*(sum(abs(Y-idx_class_p))); % number of misclassification
+    rate_misc=Num_misc/n; % rate of misclassification
     rate_misc_list(i)=rate_misc;
 end
 rate_misc_list

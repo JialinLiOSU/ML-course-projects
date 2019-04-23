@@ -1,4 +1,4 @@
-% HW3 of Machine Learning Class Problem 1
+% HW3 of Machine Learning Class Problem 1 about DT and Ensemble Learning
 train = load('train79.mat');
 test = load('test79.mat');
 % the number of observated data in training dataset
