@@ -9,7 +9,7 @@ n = length(train.d79);
 y1=7*ones(1000,1);
 y2=9*ones(1000,1);
 Y = [y1;y2];
-rng(1); % For reproducibility
+% rng(1); % For reproducibility
 
 %% fit a decision tree with 10-fold cross validation
 % Dtree = fitctree(X_train,Y, 'CrossVal','on');
@@ -42,7 +42,7 @@ kflc_bagged=kfoldLoss(BaggedTree,'mode','cumulative');
 % ErrorList(i,:)=error_BaggedT;
 
 m=min(kflc_bagged);
-idx=find(kflc_bagged==m);
+idx=find(kflc_bagged==m)
 
 BaggedtreeFinal=fitcensemble(X_train,Y,'Method','Bag','NumLearningCycles',idx(1,1));
 Y_predicted=predict(BaggedtreeFinal,X_test);
@@ -56,7 +56,7 @@ kflc_boo=kfoldLoss(BoostedTree,'mode','cumulative');
 % ErrorList(i,:)=error_BaggedT;
 
 m=min(kflc_boo);
-idx=find(kflc_boo==m);
+idx=find(kflc_boo==m)
 
 BoostedtreeFinal=fitcensemble(X_train,Y,'Method','AdaBoostM1','NumLearningCycles',idx(1,1));
 Y_predicted=predict(BoostedtreeFinal,X_test);
