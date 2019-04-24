@@ -36,23 +36,26 @@ rng(1); % For reproducibility
 % diff=abs(Y_predicted-Y)/2;
 % DT_err = (sum(diff))/2000
 %% Bagged trees
-BaggedTree = fitcensemble(X_train,Y,'Method','Bag','CrossVal','on','NumLearningCycles',500);
-kflc_bagged=kfoldLoss(BaggedTree,'mode','cumulative');
-% error_BaggedT = kflc_bagged(end);
-% ErrorList(i,:)=error_BaggedT;
+% BaggedTree = fitcensemble(X_train,Y,'Method','Bag','CrossVal','on','NumLearningCycles',200);
+% kflc_bagged=kfoldLoss(BaggedTree,'mode','cumulative');
+% % error_BaggedT = kflc_bagged(end);
+% % ErrorList(i,:)=error_BaggedT;
+% 
+% m=min(kflc_bagged);
+% idx=find(kflc_bagged==m);
+% 
+% BaggedtreeFinal=fitcensemble(X_train,Y,'Method','Bag','NumLearningCycles',idx(1,1));
+% Y_predicted=predict(BaggedtreeFinal,X_test);
+% diff=abs(Y_predicted-Y)/2;
+% DT_err = (sum(diff))/2000
 
-m=min(kflc_bagged);
-idx=find(kflc_bagged==m);
+BaggedtreeFinal=fitcensemble(X_train,Y,'Method','Bag','NumLearningCycles',200);
+Y_predicted=BaggedtreeFinal.predict(X_test);
+diff=Y_predicted-Y;
+DT_err=transpose(diff)*diff/4/n
 
-BaggedtreeFinal=fitcensemble(X_train,Y,'Method','Bag','NumLearningCycles',idx(1,1));
-Y_predicted=predict(BaggedtreeFinal,X_test);
-diff=abs(Y_predicted-Y)/2;
-DT_err = (sum(diff))/2000
-
-BaggedtreeFinal=fitcensemble(X_train,Y,'Method','Bag','NumLearningCycles',500);
-Y_predicted=predict(BaggedtreeFinal,X_test);
-diff=abs(Y_predicted-Y)/2;
-DT_err = (sum(diff))/2000
+% diff=abs(Y_predicted-Y)/2;
+% DT_err = (sum(diff))/2000
 %% Boosted trees
 BoostedTree = fitcensemble(X_train,Y,'Method','AdaBoostM1','CrossVal','on','NumLearningCycles',200);
 kflc_boo=kfoldLoss(BoostedTree,'mode','cumulative');
@@ -64,6 +67,8 @@ idx=find(kflc_boo==m);
 
 BoostedtreeFinal=fitcensemble(X_train,Y,'Method','AdaBoostM1','NumLearningCycles',idx(1,1));
 Y_predicted=predict(BoostedtreeFinal,X_test);
+
+
 diff=abs(Y_predicted-Y)/2;
 DT_err = (sum(diff))/2000
 
