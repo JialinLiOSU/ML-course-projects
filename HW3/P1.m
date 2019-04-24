@@ -1,4 +1,5 @@
 % HW3 of Machine Learning Class Problem 1 about DT and Ensemble Learning
+clear
 train = load('train79.mat');
 X_train=train.d79;
 test = load('test79.mat');
@@ -11,14 +12,14 @@ Y = [y1;y2];
 rng(123); % For reproducibility
 
 %% fit a decision tree with 10-fold cross validation
-Dtree = fitctree(X_train,Y, 'CrossVal','on');
-numBranches = @(x)sum(x.IsBranch);
-mdlDefaultNumSplits = cellfun(numBranches, Dtree.Trained);
-figure;
-histogram(mdlDefaultNumSplits)
+% Dtree = fitctree(X_train,Y, 'CrossVal','on');
+% numBranches = @(x)sum(x.IsBranch);
+% mdlDefaultNumSplits = cellfun(numBranches, Dtree.Trained);
+% figure;
+% histogram(mdlDefaultNumSplits)
 
-MaxNumSplitsList=1:1:37;
-ErrorList=ones(37,1)*-1;
+MaxNumSplitsList=1:1:60;
+ErrorList=ones(60,1)*-1;
 
 % % Decision tree
 % for i=1:37
@@ -35,14 +36,25 @@ ErrorList=ones(37,1)*-1;
 % diff=abs(Y_predicted-Y)/2;
 % DT_err = (sum(diff))/2000
 %% Bagged trees
-BaggedTree = fitcensemble(train.d79,Y,'Method','Bag','NumLearningCycles',200,'Kfold',10);
-kflc_bagged=kfoldLoss(BaggedTree,'mode','cumulative');
-Error_BaggedT = kflc_bagged(end)
-figure(1)
-plot(kflc_bagged,'r.');
-title('performance of bagged decision trees');
-xlabel('Num of Learning Cycles');
-ylabel('Misclassification Rate');
+for i=40:60
+    max_num_splits=MaxNumSplitsList(i);
+    t=templateTree('MaxNumSplits',max_num_splits);
+    BaggedTree = fitcensemble(X_train,Y,'Method','Bag','Learners',t,'CrossVal','on');
+    kflc_bagged=kfoldLoss(BaggedTree,'mode','cumulative');
+    error_BaggedT = kflc_bagged(end);
+    ErrorList(i,:)=error_BaggedT;
+end
+m=min(ErrorList);
+idx=find(ErrorList==m);
+BaggedtreeFinal=fitctree(X_train,Y,'MaxNumSplits',MaxNumSplitsList(idx));
+Y_predicted=predict(BaggedtreeFinal,X_test);
+diff=abs(Y_predicted-Y)/2;
+DT_err = (sum(diff))/2000
+% figure(1)
+% plot(kflc_bagged,'r.');
+% title('performance of bagged decision trees');
+% xlabel('Num of Learning Cycles');
+% ylabel('Misclassification Rate');
 
 %% Boosted trees
 BoostedTree = fitcensemble(train.d79,Y,'Method','AdaBoostM1','NumLearningCycles',200,'Kfold',10);
