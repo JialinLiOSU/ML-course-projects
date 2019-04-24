@@ -12,11 +12,11 @@ n = length(train.d79);
 k=2;
 Ureduce=U(:, 1:k);
 Z=X*Ureduce;
-% 
-% figure(1)
-% scatter(Z(1:1000,1),Z(1:1000,2),'.b');
-% hold on
-% scatter(Z(1001:2000,1),Z(1001:2000,2),'.r');
+
+figure(1)
+scatter(Z(1:1000,1),Z(1:1000,2),'.b');
+hold on
+scatter(Z(1001:2000,1),Z(1001:2000,2),'.r');
 
 % subproblem 2
 figure(2)
